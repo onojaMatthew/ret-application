@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: server-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      component: server
+  template:
+    metadata:
+      labels:
+        component: server
+    spec:
+      containers:
+        - name: api
+          image: smartdockerimage/ret_project_api
+          ports:
+            - containerPort: 4000
+          env:
+            - name: MONGO_DB
+              valueFrom:
+                secretKeyRef:
+                  name: mongodatabase
+                  key: MONGO_DB
+              name: MONGO_PASSWORD
+              valueFrom: 
+                secretKeyRef:
+                  name: mongopassword
+                  key: MONGO_PASSWORD
+              name: MONGO_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: mongouser
+                  key: MONGO_USERNAME
+              # Others to use are as below
+              # name: nameofvariable
+              # value: valueofvariable
+              # go to the mongodb-deployment and add the env variables there
